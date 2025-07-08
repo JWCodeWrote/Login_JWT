@@ -1,0 +1,108 @@
+basePath: /
+definitions:
+  models.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Gin + MySQL + JWT 的 API 範例
+  title: Login JWT API
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 使用 email 與 password 進行登入，成功後回傳 JWT token
+      parameters:
+      - description: 登入資訊
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 包含 access_token
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: request error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: authentication failed
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: 使用者登入
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: 帳密
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: 註冊新使用者
+      tags:
+      - Auth
+swagger: "2.0"
